@@ -275,6 +275,7 @@ class tool_certificate_template_testcase extends advanced_testcase {
         $certificate1 = $this->get_generator()->create_template((object)['name' => 'Certificate 1']);
         $user1 = $this->getDataGenerator()->create_user(['firstname' => 'User', 'lastname' => '01']);
         $user2 = $this->getDataGenerator()->create_user();
+        $issue_data = ['coursecompletiondate' = '1234567890'];
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
@@ -347,6 +348,12 @@ class tool_certificate_template_testcase extends advanced_testcase {
 
         $this->assertEquals(4, $DB->count_records('tool_certificate_issues', ['templateid' => $certificate1->get_id(),
             'userid' => $user2->id]));
+
+        // Test issue_certificate with coursecompletiondate
+        $issueid = $certificate1->issue_certificate($user2->id, null, $issue_data);
+        $issue = $DB->get_record('tool_certificate_issues', ['id' => $issueid]);
+
+        $this->assertEquals($issue->timecreated,$issue_data['coursecompletiondate']);
     }
 
     /**

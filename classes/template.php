@@ -682,6 +682,9 @@ class template {
         $issue->code = \tool_certificate\certificate::generate_code($issue->userid);
         $issue->emailed = 0;
         $issue->timecreated = time();
+        if(isset($data["coursecompletiondate"])) {
+            $issue->timecreated = $data["coursecompletiondate"];
+        }
         $issue->expires = $expires;
         $issue->component = $component;
         $issue->courseid = $courseid;
